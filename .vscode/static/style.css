@@ -1,0 +1,265 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: #22092B;
+    color: #F0EDED;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+header {
+    background-color: #0D0B0B;
+    border-bottom: 2px solid #3A1947;
+    padding: 14px 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.brand-title {
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: #FFFFFF;
+}
+
+.brand-sub {
+    font-size: 12px;
+    color: #B8A6BF;
+}
+
+.header-meta {
+    background-color: #18061F;
+    border: 1px solid #4A2559;
+    padding: 6px 12px;
+    font-family: "Consolas", "Courier New", monospace;
+    font-size: 12px;
+    color: #E8DFEC;
+}
+
+.container {
+    max-width: 1240px;
+    margin: 24px auto;
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 20px;
+}
+
+@media (max-width: 900px) {
+    .container {
+        grid-template-columns: 1fr;
+    }
+}
+
+.panel {
+    background-color: #0D0B0B;
+    border: 1px solid #3A1947;
+    border-radius: 3px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.panel-header {
+    border-bottom: 1px solid #291830;
+    padding-bottom: 10px;
+    margin-bottom: 16px;
+}
+
+.panel-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: #FFFFFF;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+.panel-desc {
+    font-size: 12px;
+    color: #B8A6BF;
+    margin-top: 2px;
+}
+
+.form-group {
+    margin-bottom: 14px;
+}
+
+label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: #D6C8DC;
+    margin-bottom: 5px;
+}
+
+input[type="file"],
+input[type="number"] {
+    width: 100%;
+    background-color: #171317;
+    border: 1px solid #3D2447;
+    color: #FFFFFF;
+    padding: 8px 10px;
+    font-size: 13px;
+    border-radius: 2px;
+    font-family: "Consolas", "Courier New", monospace;
+}
+
+input[type="number"]:focus,
+input[type="file"]:focus {
+    outline: none;
+    border-color: #7B3E94;
+    background-color: #1F1821;
+}
+
+.btn {
+    width: 100%;
+    background-color: #22092B;
+    color: #FFFFFF;
+    border: 1px solid #572B69;
+    padding: 10px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.btn:hover {
+    background-color: #310E3E;
+    border-color: #7B3E94;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-top: 18px;
+}
+
+.stat-box {
+    background-color: #161217;
+    border: 1px solid #2E1B36;
+    padding: 10px 12px;
+}
+
+.stat-label {
+    font-size: 11px;
+    color: #B8A6BF;
+    text-transform: uppercase;
+}
+
+.stat-val {
+    font-size: 20px;
+    font-weight: 700;
+    font-family: "Consolas", "Courier New", monospace;
+    margin-top: 2px;
+}
+
+.table-wrap {
+    margin-top: 16px;
+    max-height: 290px;
+    overflow-y: auto;
+    border: 1px solid #2E1B36;
+    background-color: #141014;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+th {
+    background-color: #0D0B0B;
+    color: #D6C8DC;
+    text-align: left;
+    padding: 8px 12px;
+    font-size: 12px;
+    text-transform: uppercase;
+    position: sticky;
+    top: 0;
+    border-bottom: 1px solid #3A1947;
+}
+
+td {
+    padding: 8px 12px;
+    border-bottom: 1px solid #241929;
+    font-family: "Consolas", "Courier New", monospace;
+}
+
+tr:hover td {
+    background-color: #1F1224;
+}
+
+.badge-pass {
+    background-color: #1B4D20;
+    color: #A5D6A7;
+    border: 1px solid #2E7D32;
+    padding: 2px 8px;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.badge-fail {
+    background-color: #5F1919;
+    color: #EF9A9A;
+    border: 1px solid #C62828;
+    padding: 2px 8px;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.sensor-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.result-panel {
+    margin-top: 18px;
+    padding: 16px;
+    background-color: #161217;
+    border: 1px solid #3A1947;
+}
+
+.result-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    color: #B8A6BF;
+}
+
+.result-status {
+    font-size: 22px;
+    font-weight: 700;
+    margin: 4px 0;
+    font-family: "Consolas", "Courier New", monospace;
+}
+
+.prob-text {
+    font-size: 13px;
+    color: #D6C8DC;
+}
+
+.prob-val {
+    font-family: "Consolas", "Courier New", monospace;
+}
+
+.status-pass {
+    color: #81C784;
+}
+
+.status-fail {
+    color: #E57373;
+}
+
+.hidden {
+    display: none;
+}

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VectraYield | Semiconductor Wafer Intelligence</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="../static/style.css">
+</head>
+<body>
+
+    <header>
+        <div class="brand-wrap">
+            <div>
+                <div class="brand-title">VECTRAYIELD // SILICON TELEMETRY AI</div>
+                <div class="brand-sub">Automated Semiconductor Wafer Yield & Defect Diagnostics</div>
+            </div>
+        </div>
+        <div class="header-meta">
+            F2.0 RECALL CUTOFF: <strong>{{ threshold }}%</strong>
+        </div>
+    </header>
+
+    <section class="hero-wrapper">
+        <div class="panel hero-panel" style="grid-template-columns: 1fr;">
+            <div class="hero-content">
+                <div class="hero-badge">UCI-SECOM PRODUCTION ARCHITECTURE</div>
+                <h1 class="hero-heading">
+                    Zero-Defect Semiconductor Screening.<br>
+                    <span>High-Recall Anomaly Detection on 590+ Sensors.</span>
+                </h1>
+                <p class="hero-quote">
+                    "Semiconductor yields cannot afford missed defective chips. VectraYield combines 98% PCA variance retention with F2.0 beta calibration to heavily penalize false negatives and catch faulty silicon early."
+                </p>
+                <div class="hero-metrics">
+                    <div class="metric-chip">
+                        <span class="m-val">590+</span>
+                        <span class="m-lbl">Telemetry Channels</span>
+                    </div>
+                    <div class="metric-chip">
+                        <span class="m-val">100%</span>
+                        <span class="m-lbl">Wafer Retention</span>
+                    </div>
+                    <div class="metric-chip">
+                        <span class="m-val">98%</span>
+                        <span class="m-lbl">PCA Variance</span>
+                    </div>
+                    <div class="metric-chip">
+                        <span class="m-val">Beta 2.0</span>
+                        <span class="m-lbl">Recall Priority</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <main class="container">
+        <!-- Left: Batch CSV Inspection -->
+        <section class="panel">
+            <div class="panel-header">
+                <div class="panel-title">1. Batch Wafer Log Inspection</div>
+                <div class="panel-desc">Upload factory telemetry CSV logs (e.g., <code>real_world_test_wafers.csv</code>) for screening.</div>
+            </div>
+
+            <form id="batchForm">
+                <div class="form-group">
+                    <label for="csvFile">Select Telemetry CSV File</label>
+                    <input type="file" id="csvFile" accept=".csv" required>
+                </div>
+                <button type="submit" class="btn">Execute Batch Check</button>
+            </form>
+
+            <div id="batchSummary" class="stats-grid hidden">
+                <div class="stat-box">
+                    <div class="stat-label">Total Wafers</div>
+                    <div id="totalCount" class="stat-val">0</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">Pass Count</div>
+                    <div id="passCount" class="stat-val status-pass">0</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">Fail Count</div>
+                    <div id="failCount" class="stat-val status-fail">0</div>
+                </div>
+            </div>
+
+            <div id="batchTableContainer" class="table-wrap hidden">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Wafer ID</th>
+                            <th>Defect Risk</th>
+                            <th>Result</th>
+                        </tr>
+                    </thead>
+                    <tbody id="batchTableBody"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Right: Single Wafer Live Simulator -->
+        <section class="panel">
+            <div class="panel-header">
+                <div class="panel-title">2. Live Sensor Parameter Simulator</div>
+                <div class="panel-desc">Override primary sensor channels while remaining channels stay locked at baseline medians.</div>
+            </div>
+
+            <form id="singleForm">
+                <div class="sensor-grid">
+                    {% for sensor, val in sensors.items() %}
+                    <div>
+                        <label>SENSOR CH_{{ sensor }}</label>
+                        <input type="number" step="any" name="{{ sensor }}" value="{{ val }}">
+                    </div>
+                    {% endfor %}
+                </div>
+                <button type="submit" class="btn">Evaluate Single Wafer</button>
+            </form>
+
+            <div id="singleResult" class="result-panel hidden">
+                <div class="result-label">Diagnostic Verdict</div>
+                <div id="singleStatus" class="result-status"></div>
+                <div class="prob-text">
+                    Failure Probability: <strong id="singleProb" class="prob-val"></strong>% 
+                    <span style="color: #9A8C9E; font-size: 11px;">(Cutoff: {{ threshold }}%)</span>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        document.getElementById("batchForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const fileInput = document.getElementById("csvFile").files[0];
+            const formData = new FormData();
+            formData.append("file", fileInput);
+
+            const res = await fetch("/predict_batch", { method: "POST", body: formData });
+            const data = await res.json();
+
+            document.getElementById("batchSummary").classList.remove("hidden");
+            document.getElementById("batchTableContainer").classList.remove("hidden");
+
+            document.getElementById("totalCount").textContent = data.total;
+            document.getElementById("passCount").textContent = data.passed;
+            document.getElementById("failCount").textContent = data.failed;
+
+            const tbody = document.getElementById("batchTableBody");
+            tbody.innerHTML = "";
+            data.results.forEach(row => {
+                const badge = row.status === "FAIL"
+                    ? `<span class="badge-fail">FAIL</span>`
+                    : `<span class="badge-pass">PASS</span>`;
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${row.wafer_id}</td>
+                        <td>${row.risk}%</td>
+                        <td>${badge}</td>
+                    </tr>`;
+            });
+        });
+
+        document.getElementById("singleForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const payload = Object.fromEntries(formData.entries());
+
+            const res = await fetch("/predict_single", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            });
+            const data = await res.json();
+
+            const box = document.getElementById("singleResult");
+            const statusEl = document.getElementById("singleStatus");
+
+            box.classList.remove("hidden");
+
+            if (data.status === "FAIL") {
+                statusEl.className = "result-status status-fail";
+                statusEl.textContent = "STATUS: DEFECTIVE [FAIL]";
+            } else {
+                statusEl.className = "result-status status-pass";
+                statusEl.textContent = "STATUS: NORMAL [PASS]";
+            }
+            document.getElementById("singleProb").textContent = data.probability;
+        });
+    </script>
+</body>
+</html>
